@@ -1,0 +1,582 @@
+###########################
+# Test events
+###########################
+#Infos:
+# All (world)events after 300 are free!
+add_namespace = austria
+
+# Hungarian Anschluss Completed   #This event is for Austria
+country_event = {
+	id = austria.3
+	title = austria.3.t
+	desc = austria.3.d
+	picture = GFX_report_event_german_speech
+	
+	is_triggered_only = yes
+	
+	option = { #This is just a OK word to complete the annextion of Hungary
+		name = austria.3.a
+		43 = {
+			if = {
+				limit = { is_owned_by = HUN }
+				add_core_of = AUS
+			}
+		}
+		154 = {
+			if = {
+				limit = { is_owned_by = HUN }
+				add_core_of = AUS
+			}
+		}
+		155 = {
+			if = {
+				limit = { is_owned_by = HUN }
+				add_core_of = AUS
+			}
+		}
+
+		annex_country = { target = HUN transfer_troops = yes }
+		set_country_flag = HUN_annexed
+		news_event = { hours = 6 id = news.36 }
+	}
+}
+
+# Austria askes Hungary to get anschlussed (AUS annex HUN)
+country_event = {
+	id = austria.1
+	title = austria.1.t
+	desc = austria.1.d
+	picture = GFX_report_event_hitler_parade
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = austria.1.a
+		AUS = { 
+			country_event = { hours = 2 id = austria.3 }
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+	}
+	option = { # Refuse
+		name = austria.1.b
+		ai_chance = {
+			base = 10			
+			modifier = {
+				factor = 0
+			}
+		}
+		AUS = {
+			add_opinion_modifier = { target = ROOT modifier = GER_anschluss_rejected }
+			country_event = { hours = 2 id = austria.4 }
+			if = { 
+				limit = { is_in_faction_with = HUN }
+				remove_from_faction = HUN
+			}
+		}
+	}
+}
+
+# Get annexed by Austria! (event for HUN) IDK for what we made thisXD
+country_event = {
+	id = austria.2
+	title = austria.2.t
+	desc = austria.d
+	picture = GFX_report_event_german_reichstag_gathering
+
+	is_triggered_only = yes
+
+	option = {
+		name = austria.2.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					has_government = neutrality
+					has_government = fascism
+				}
+			}
+		}
+		random_other_country = {
+			limit = {
+				original_tag = HUN
+				NOT = { tag = ROOT }
+			}
+			FROM = {
+				add_to_war = {
+					targeted_alliance = ROOT
+					enemy = PREV
+				}
+				annex_country = { target = ROOT transfer_troops = yes }
+				hidden_effect = { news_event = { id = news.237 } }
+			}
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+	}
+	option = {
+		name = austria.2.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					has_government = communism
+					has_government = democratic
+				}
+			}
+		}
+		every_country = {
+			limit = {
+				OR = {
+					tag = HUN
+					original_tag = HUN
+				}
+			}
+			FROM = {
+				create_wargoal = {
+					target = PREV
+					type = annex_everything
+				}
+			}
+		}
+	}
+}
+
+# Hungary refuses Anschluss    				#This is almost finished, only translation is needed!
+country_event = {
+	id = austria.4
+	title = austria.4.t
+	desc = austria.4.d
+	picture = GFX_report_event_german_troops
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.4.a
+		add_state_claim = 43
+		add_state_claim = 154
+		add_state_claim = 155
+		create_wargoal = {
+			type = take_state_focus
+			target = HUN
+			generator = { 43 154 155 }
+		}
+	}
+}
+
+# Yugo Focus/ Annex Dalmatien and Slowenia
+country_event = {
+	id = austria.5
+	title = austria.5.t
+	desc = austria.5.d
+	picture = GFX_report_event_vienna_award_hungary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.5.a
+		AUS = { 
+			transfer_state = 45
+			transfer_state = 102
+			transfer_state = 103
+			transfer_state = 104
+			transfer_state = 109
+		}
+		hidden_effect = {
+			country_event = { days = 1 id = news.19 } #news.19 is currently the Germany demand memmental Need to fix!
+		}
+	}
+}
+
+# War against Poland
+country_event = {
+	id = austria.101
+	title = austria.101.t
+	desc = austria.101.d
+	picture = GFX_report_event_vienna_award_hungary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.101.a
+		AUS = { 
+		
+				country_event = { hours = 2 id = austria.102 }
+		}
+		hidden_effect = {
+			country_event = { days = 1 id = news.19 } #news.19 is currently the Germany demand memmental Need to fix!
+		}
+	}
+}
+
+country_event = {
+	id= austria.102
+	title = austria.102.t
+	desc = austria.102.d
+	picture = GFX_report_event_vienna_award_hungary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.102.a
+		AUS= {
+		create_wargoal = {
+					type = take_state_focus
+					target = POL
+					generator = { 88 }
+				}
+		}
+	}
+}
+
+# Annexing CZE
+# Austria askes Czech to get anschlussed (AUS annex CZE)
+country_event = {
+	id = austria.11
+	title = austria.11.t
+	desc = austria.11.d
+	picture = GFX_report_event_hitler_parade
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = austria.11.a
+		AUS = { 
+			country_event = { hours = 2 id = austria.13 }
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+	}
+	option = { # Refuse
+		name = austria.11.b
+		ai_chance = {
+			base = 10			
+			modifier = {
+				factor = 0
+			}
+		}
+		AUS = {
+			add_opinion_modifier = { target = ROOT modifier = GER_anschluss_rejected } #
+			country_event = { hours = 2 id = austria.14 }
+			if = { 
+				limit = { is_in_faction_with = CZE }
+				remove_from_faction = CZE
+			}
+		}
+	}
+}
+
+# Czech Anschluss Completed   #This event is for Austria
+country_event = {
+	id = austria.13
+	title = austria.13.t
+	desc = austria.13.d
+	picture = GFX_report_event_german_speech
+	
+	is_triggered_only = yes
+	
+	option = { #This is just a OK word to complete the annextion of Hungary
+		name = austria.13.a
+		9 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		59 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		75 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		74 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		70 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		664 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		71 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		72 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+		73 = {
+			if = {
+				limit = { is_owned_by = CZE }
+				add_core_of = AUS
+			}
+		}
+
+		annex_country = { target = CZE transfer_troops = yes } 
+		set_country_flag = CZE_annexed
+		news_event = { hours = 6 id = news.36 }
+	}
+}
+
+
+# czech refuses Anschluss    				
+country_event = {
+	id = austria.14
+	title = austria.14.t
+	desc = austria.14.d
+	picture = GFX_report_event_german_troops
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.14.a
+		add_state_claim = 69
+		add_state_claim = 9
+		add_state_claim = 75
+		add_state_claim = 74
+		add_state_claim = 70
+		add_state_claim = 664
+		add_state_claim = 71
+		add_state_claim = 72
+		add_state_claim = 73
+		create_wargoal = {
+			type = take_state_focus
+			target = CZE
+			generator = { 59 9 75 74 70 664 71 72 73 }
+		}
+	}
+}
+
+# Asking CZE to get annexed by Austria
+country_event = {
+	id = austria.12
+	title = austria.12.t
+	desc = austria.12.d
+	picture = GFX_report_event_german_reichstag_gathering
+
+	is_triggered_only = yes
+
+	option = {
+		name = austria.12.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					has_government = neutrality
+					has_government = fascism
+				}
+			}
+		}
+		random_other_country = {
+			limit = {
+				original_tag = CZE
+				NOT = { tag = ROOT }
+			}
+			FROM = {
+				add_to_war = {
+					targeted_alliance = ROOT
+					enemy = PREV
+				}
+				annex_country = { target = ROOT transfer_troops = yes }
+				hidden_effect = { news_event = { id = news.237 } }
+			}
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+	}
+	option = {
+		name = austria.12.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					has_government = communism
+					has_government = democratic
+				}
+			}
+		}
+		every_country = {
+			limit = {
+				OR = {
+					tag = CZE
+					original_tag = CZE
+				}
+			}
+			FROM = {
+				create_wargoal = {
+					target = PREV
+					type = annex_everything
+				}
+			}
+		}
+	}
+}
+
+# Asking ITA to give control, or get fucked up by a economy crisis
+	country_event = {
+	id = austria.6
+	title = austria.6.t
+	desc = austria.6.d
+	picture = GFX_report_event_german_troops
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_war_with = AUS }
+	}
+	
+	option = {
+		name = austria.6.a
+		ai_chance = {
+			factor = 20
+		}
+		AUS = { country_event = { id = austria.7 days = 1 } }
+		effect_tooltip = {
+			AUS = {
+				transfer_state = 39
+				transfer_state = 736
+			}
+		}
+		hidden_effect = {
+			news_event = { id = news.203 hours = 6 }
+		}
+	}
+	
+	option = {
+		name = austria.6.b
+		ai_chance = {
+			factor = 0
+		}
+		ITA = {
+			country_event = { id = austria.8 days = 1 } 
+		}
+		hidden_effect = {
+			news_event = { hours = 1 id = news.204 }
+		}
+		#effect_tooltip = {
+		#	GER = {
+		#		declare_war_on = {
+		#			target = POL
+		#			type = take_state
+		#			generator = { 85 }
+		#		}
+		#	}
+		#}
+	}
+}
+
+# ITA accepted
+country_event = {
+	id = austria.7
+	title = austria.7.t
+	desc = austria.7.d
+	picture = GFX_report_event_german_polish_border
+
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.7.a
+		transfer_state = 39
+		transfer_state = 736
+	}
+}
+
+# ITA refused
+country_event = {
+	id = austria.8
+	title = austria.8.t
+	desc = austria.8.d
+	picture = GFX_report_event_german_polish_border
+
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.8.a
+		ITA = {
+			add_timed_idea = { idea = undisturbed_isolation days = 730 }
+			add_timed_idea = { idea = not_so_great_depression days = 730 }
+			add_timed_idea = { idea = austrian_economy_war days = 730 }
+		}
+	}
+
+}
+
+#Asking ITA to give us South-tyrol and istria
+country_event = {
+	id = austria.15
+	title = austria.15.t
+	desc = austria.15.d
+	picture = GFX_report_event_vienna_award_hungary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.15.a
+		ITA = { 
+			#add_timed_idea = { idea =  days = 730 }
+		}
+		hidden_effect = {
+			country_event = { days = 1 id = austria.16 } #news.19 is currently the Germany demand memmental Need to fix!
+		}
+	}
+}
+
+
+# ITA refused
+country_event = {
+	id = austria.16
+	title = austria.16.t
+	desc = austria.16.d
+	picture = GFX_report_event_vienna_award_hungary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.16.a
+		ITA = { 
+			#add_timed_idea = { idea =  days = 730 }
+		}
+		#hidden_effect = {
+		#	country_event = { days = 1 id = news.19 } #news.19 is currently the Germany demand memmental Need to fix!
+		#}
+	}
+}
+
+country_event = {
+	id = austria.16
+	title = austria.16.t
+	desc = austria.16.d
+	picture = GFX_report_event_vienna_award_hungary
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.16.a
+		ITA = { 
+			#add_timed_idea = { idea =  days = 730 }
+		}
+		hidden_effect = {
+			country_event = { days = 1 id = news.300 } #news.19 is currently the Germany demand memmental Need to fix!
+		}
+	}
+}

@@ -1,0 +1,586 @@
+focus_tree = {
+	id = test_focus
+	
+	country = {
+		factor = 0
+		
+		modifier = {
+			add = 10
+			#tag = AUS
+		}
+	}
+	
+	default = no
+
+	focus = {
+		id = AUS_rebuild_austria_hungary
+		icon = GFX_goal_anschluss
+		x = 5
+		y = 0
+		cost = 0
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					country_exists = HUN
+					HUN = {
+						has_civil_war = no
+						OR = {
+							owns_state = 43
+							owns_state = 154
+							owns_state = 155
+						}
+					}
+				}				
+				HUN = {
+					country_event = austria.1
+				}
+			}
+			if = {
+				limit = {
+					any_other_country = {
+						original_tag = HUN
+						has_civil_war = yes
+						OR = {
+							owns_state = 43
+							owns_state = 154
+							owns_state = 155
+						}
+					}
+				}
+				custom_effect_tooltip = austria.2.warning
+				random_other_country = {
+					limit = {
+						original_tag = HUN
+						OR = {
+							has_government = fascism
+							AND = {
+								has_government = neutrality
+								NOT = {
+									any_other_country = {
+										original_tag = HUN
+										has_government = fascism
+									}
+								}
+							}
+							NOT = {
+								any_other_country = {
+									original_tag = HUN
+									OR = {
+										has_government = fascism
+										has_government = neutrality
+									}
+								}
+							}							
+						}
+					}
+					country_event = { id = austria.2 days = 1 }
+				}
+			}
+
+			if = {
+				limit = {
+					43 = {
+						owner = {
+							NOT = {
+								tag = HUN
+							}
+							NOT = {
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+				}
+				add_state_core = 43
+			}
+			if = {
+				limit = {
+					154 = {
+						owner = {
+							NOT = {
+								tag = HUN
+							}
+							NOT = {
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+				}
+				add_state_core = 154
+			}
+			if = {
+				limit = {
+					155 = {
+						owner = {
+							NOT = {
+								tag = HUN
+							}
+							NOT = {
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+				}
+				add_state_core = 155
+			}
+		}
+	}
+
+	focus = {
+		id = AUS_claims_on_yugoslavia
+		icon = GFX_goal_generic_forceful_treaty
+		prerequisite = { focus = AUS_rebuild_austria_hungary }
+		mutually_exclusive = { focus = AUS_befriend_yugoslavia }
+		available = {
+			#has_army_manpower = { size > 199999 }
+		}
+		x = 4
+		y = 1
+		cost = 0
+		bypass = {
+			102 = { is_owned_by = AUS }
+			103 = { is_owned_by = AUS }
+			104 = { is_owned_by = AUS }
+			109 = { is_owned_by = AUS }
+			45 = { is_owned_by = AUS }
+		}
+		ai_will_do = {
+			factor = 10	
+		}	
+		completion_reward = {
+			add_state_core = 45
+			add_state_core = 102
+			add_state_core = 103
+			add_state_core = 104
+			add_state_core = 109
+			if = {
+				limit = {
+					YUG = { 
+						owns_state = 102
+						owns_state = 103
+						controls_state = 102
+						controls_state = 103
+					}
+				}
+				YUG = {
+					country_event = { id = austria.5 }
+				}
+			}
+		}
+	}
+	
+	focus = {
+		id = AUS_rebuild_imperial_navy
+		icon = GFX_goal_generic_construct_naval_dockyard
+		prerequisite = { focus = AUS_claims_on_yugoslavia }
+		x = 1
+		y = 2
+		cost = 0
+
+		available_if_capitulated = yes
+
+
+		available = {
+			any_state = {
+				is_coastal = yes
+				is_controlled_by = ROOT
+			}
+		}
+
+		complete_tooltip = {
+			navy_experience = 25
+			add_extra_state_shared_building_slots = 4
+			add_building_construction = {
+				type = dockyard
+				level = 4
+				instant_build = yes
+			}
+		}
+		
+		completion_reward = {
+			navy_experience = 25
+			if = {
+				limit = {
+					NOT = {
+						any_owned_state = {
+							dockyard > 0
+							free_building_slots = {
+								building = dockyard
+								size > 2
+								include_locked = yes
+							}
+						}
+					}
+					any_owned_state = {
+						is_coastal = yes
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_coastal = yes
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = dockyard
+						level = 4
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = naval_effort_built }
+					any_owned_state = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = dockyard
+						level = 4
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = naval_effort_built }
+					NOT = {
+						any_owned_state = {
+							free_building_slots = {
+								building = dockyard
+								size > 2
+								include_locked = yes
+							}
+						}
+					}
+				}
+				random_state = {
+					limit = {
+						controller = { tag = ROOT }
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = dockyard
+						level = 4
+						instant_build = yes
+					}
+				}
+			}			
+		}
+	}
+	
+	focus = {
+		id = AUS_destroyer_effort
+		icon = GFX_goal_generic_wolf_pack
+		prerequisite = { focus = AUS_rebuild_imperial_navy }
+		mutually_exclusive = { focus = AUS_submarine_effort }
+		x = 0
+		y = 3
+		cost = 0
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = dd_bonus
+				bonus = 0.5
+				ahead_reduction = 1
+				uses = 2
+				technology = early_destroyer
+				technology = basic_destroyer
+				technology = improved_destroyer
+				technology = advanced_destroyer
+			}
+		}
+	}
+	
+	focus = {
+		id = AUS_submarine_effort
+		icon = GFX_goal_generic_navy_submarine
+		prerequisite = { focus = AUS_rebuild_imperial_navy }
+		mutually_exclusive = { focus = AUS_destroyer_effort }
+		x = 2
+		y = 3
+		cost = 0
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = ss_bonus
+				bonus = 0.5
+				ahead_reduction = 1
+				uses = 2
+				technology = early_submarine
+				technology = basic_submarine
+				technology = improved_submarine
+				technology = advanced_submarine
+			}
+		}
+	}
+	
+	focus = {
+		id = AUS_naval_warfare_tactics
+		icon = GFX_goal_generic_build_navy
+		prerequisite = { focus = AUS_destroyer_effort focus = AUS_submarine_effort }
+		x = 1
+		y = 4
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			navy_experience = 50
+			random_owned_controlled_state = {
+				limit = {
+					dockyard > 0
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					dockyard > 0
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+
+			if = {
+				limit = {
+					NOT = {
+						any_owned_state = {
+							dockyard > 0
+							free_building_slots = {
+								building = dockyard
+								size > 0
+								include_locked = yes
+							}
+						}
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						free_building_slots = {
+							building = dockyard
+							size > 1
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						free_building_slots = {
+							building = dockyard
+							size > 1
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}				
+			}
+
+			add_tech_bonus = {
+				name = naval_doctrine_bonus
+				bonus = 0.5
+				uses = 2
+				category = naval_doctrine
+			}
+		}
+	}
+	
+	focus = {
+		id = AUS_naval_innovations_focus
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		prerequisite = { focus = AUS_naval_warfare_tactics }
+		x = 1
+		y = 5
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			navy_experience = 50
+			add_tech_bonus = {
+				name = cr_bonus
+				bonus = 0.5
+				uses = 1
+				category = cl_tech
+			}
+			add_tech_bonus = {
+				name = cr_bonus
+				bonus = 0.5
+				uses = 1
+				category = ca_tech
+			}
+		}
+	}
+	
+	focus = {
+		id = AUS_carrier_studies
+		icon = GFX_goal_generic_navy_battleship
+		prerequisite = { focus = AUS_naval_warfare_tactics }
+		x = -1
+		y = 5
+		cost = 10
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			navy_experience = 25
+			add_tech_bonus = {
+				name = cv_bonus
+				bonus = 0.5
+				uses = 1
+				category = cv_tech
+			}
+		}
+	}
+	
+	focus = {
+		id = AUS_battleships_for_victory
+		icon = GFX_goal_generic_navy_battleship
+		prerequisite = { focus = AUS_naval_warfare_tactics }
+		x = -3
+		y = 5
+		cost = 10
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			navy_experience = 25
+			add_tech_bonus = {
+				name = capital_ships_bonus
+				bonus = 0.5
+				uses = 1
+				technology = early_battleship
+				technology = basic_battleship
+				technology = improved_battleship
+				technology = advanced_battleship
+				technology = heavy_battleship
+				technology = heavy_battleship2
+			}
+		}
+	}
+
+}

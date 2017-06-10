@@ -1,0 +1,35 @@
+###########################
+# News Events
+###########################
+
+add_namespace = news
+
+# Italy refused to give Austria control of Sout tyrol and Istria
+news_event = {
+	id = news.300
+	title = news.300.t
+	desc = news.300.d
+	picture = GFX_news_event_001
+	
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = news.301.a
+		#trigger = {
+		#	NOT = {
+		#		TAG = JAP
+		#		TAG = CHI
+		#	}
+		#}
+	}
+	option = {
+		name = news.301.b
+		trigger = { TAG = JAP }
+	}
+	option = {
+		name = news.301.c
+		trigger = { TAG = CHI }
+	}
+}

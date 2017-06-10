@@ -1,0 +1,367 @@
+﻿
+
+
+
+add_namespace = austria
+
+# Serbia or War (Yugo)
+country_event = {
+	id = austria.10060
+	title = austria.10060.t
+	desc = austria.10060.d
+	picture = GFX_report_event_german_troops
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_war_with = YUG }
+	}
+	
+	option = {
+		name = austria.10060.a
+		ai_chance = {
+			factor = 20
+			modifier = {
+				factor = 0								###########wadaWdAAWADAFFHHH <----Need to do.
+				is_historical_focus_on = yes
+			}
+		}
+		AUS = { country_event = { id = austria.10062 days = 1 } }
+		effect_tooltip = {
+			AUS = {
+				transfer_state = 102
+				transfer_state = 109
+				transfer_state = 103
+				transfer_state = 104
+				transfer_state = 107
+			}
+		}
+		country_event = { id = yugoslavia.1 days = 7 }	#remind me, i want to make a world event and I need to finish this
+		#hidden_effect = {
+		#	news_event = { id = news.203 hours = 6 }	#need to make a event like this
+		}
+	}
+	
+	option = {
+		name = austria.10062.b
+		ai_chance = {
+			factor = 80
+			modifier = {
+				factor = 3
+				strength_ratio = {
+					tag = AUS
+					ratio > 0.7
+				}
+			}
+			modifier = {
+				factor = 0.1
+				any_other_country = {
+					is_major = yes
+					is_in_faction_with = YUG
+				}
+			}
+		}
+		AUS = { country_event = { id = austria.10061 days = 1 } 	
+			if = {
+				limit = {
+					is_in_faction_with = YUG
+					is_faction_leader = yes
+				}
+				remove_from_faction = YUG
+			}
+			if = {
+				limit = { 
+					is_in_faction_with = YUG
+					is_faction_leader = no
+				}
+				random_other_country = {
+					limit = { 
+						is_in_faction_with = AUS
+						is_faction_leader = yes
+					}
+					remove_from_faction = AUS
+				}
+			}			
+		}		
+		hidden_effect = {
+			news_event = { hours = 1 id = news.1000 }
+		}
+		effect_tooltip = {
+			AUS = {
+				declare_war_on = {
+					target = YUG
+					type = take_state
+					generator = { 102	103	104	109	107 }
+				}
+			}
+		}
+	}
+}
+# Yugo Refuses to Cede Serbia (Serbia or War)
+country_event = {
+	id = austria.10061
+	title = austria.10061.t
+	desc = austria.10061.d
+	picture = GFX_report_event_polish_tanks_02
+
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.10061.a
+		declare_war_on = {
+			target = YUG
+			type = take_state
+			generator = { 102	103	109	104	107 }
+		}
+	}
+}
+
+# Molotov-Ribbentrop Pact (austria)
+country_event = {
+	id = austria.9
+	title = austria.9.t
+	desc = austria.9.d
+	picture = GFX_report_event_molotov_ribentrop_handshake
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.9.a	#sounds good
+		ai_chance = { 
+			factor = 90 
+			modifier = {
+				factor = 0
+				GER = {
+					OR = { 
+						has_wargoal_against = AUS
+						is_justifying_wargoal_against = AUS
+					}
+					NOT = {
+						is_in_faction_with = AUS
+					}
+				}
+			}
+		}
+		add_opinion_modifier = { target = GER modifier = MR_pact }# pact		
+		custom_effect_tooltip = germany.11.a.tt
+		add_state_claim = 89
+		add_state_claim = 88
+		hidden_effect =  { add_timed_idea = { idea = SOV_molotov_ribbentrop_pact days = 730 } }
+		GER = {
+			country_event = { days = 1 id = austria.10 }
+			effect_tooltip = {
+				add_opinion_modifier = { target = AUS modifier = MR_pact }# pact
+			}
+		}
+		set_global_flag = aus_yes_pact
+	}
+	
+	option = {
+		name = austria.9.b	#no way 
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				GER = {
+					NOT = { has_wargoal_against = AUS }
+					NOT = { is_justifying_wargoal_against = AUS }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_in_faction_with = GER
+			}
+		}
+		add_political_power = -50	
+		add_opinion_modifier = { target = GER modifier = refused_MR_pact }# no pact 
+		GER = {
+			country_event = { days = 1 id = austria.11 }
+		}
+		set_global_flag = aus_no_pact
+	}
+}
+
+# Soviets Sign MR Pact
+country_event = {
+	id = austria.10
+	title = austria.10.t
+	desc = austria.10.d
+	picture = GFX_report_event_molotov_signing_pact
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.10.a	#neat
+		every_other_country = {
+			limit = {
+				NOT = { tag = GER }
+				has_government = fascism 
+			}
+			add_opinion_modifier = { target = GER modifier = MR_pact_fascists }
+		}
+		diplomatic_relation = { country = AUS relation = non_aggression_pact }
+		add_opinion_modifier = { target = AUS modifier = MR_pact }# pact
+		hidden_effect = {
+			country_event = { hours = 6 id = news.32 }
+		}
+	}
+}
+
+# Soviets Reject MR Pact
+country_event = {
+	id = austria.11
+	title = austria.11.t
+	desc = austria.11.d
+	picture = GFX_report_event_stalin_01
+
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.11.a	#bah
+		add_opinion_modifier = { target = AUS modifier = refused_MR_pact }# no pact
+	}
+}
+
+# Poland conquered... honor MR Pact?
+country_event = {
+	id = austria.12
+	title = austria.12.t
+	desc = austria.12.d
+	picture = GFX_report_event_german_troops
+	
+	fire_only_once = yes
+
+	trigger = {
+		tag = GER
+		has_global_flag = aus_yes_pact
+		AUS = { exists = yes }
+		NOT =  { has_war_with = AUS }
+		OR = {
+			OR = {
+				owns_state = 89
+				owns_state = 88
+			}
+			AND = {
+				POL = { has_capitulated = yes }
+				OR = {
+					controls_state = 88
+					controls_state = 89
+				}
+			}
+			OR = {
+				any_other_country = {
+					is_in_faction_with = GER
+					GER = {
+						is_faction_leader = yes
+					}
+					OR = {
+						owns_state = 89
+						owns_state = 88
+						AND = {
+							POL = { has_capitulated = yes }
+							OR = {
+								controls_state = 89
+								controls_state = 88
+							}
+						}		
+					}
+				}
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 1
+	}
+	
+	option = {
+		ai_chance = {
+			base = 1
+		}
+		name = austria.12.a
+		if = {
+			limit = {
+				88 = {
+					OR = {
+						is_controlled_by = GER
+						any_other_country = {
+							controls_state = 88
+							is_in_faction_with = GER
+							GER = { is_faction_leader = yes }
+						}
+					}
+				}
+			}
+			AUS = { transfer_state = 88 }
+		}
+		if = {
+			limit = {
+				89 = {
+					OR = {
+						is_controlled_by = GER
+						any_other_country = {
+							controls_state = 89
+							is_in_faction_with = GER
+							GER = { is_faction_leader = yes }
+						}
+					}
+				}
+			}
+			AUS = { transfer_state = 89 }
+		}
+		AUS = { country_event = austria.13 }
+	}
+	option = {
+		name = austria.12.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				add = -1
+				is_historical_focus_on = yes
+			}
+		}
+		AUS = { country_event = germany.16 }
+		clr_global_flag = sov_yes_pact
+		diplomatic_relation = {
+			country = AUS
+			relation = non_aggression_pact
+			active = no
+		}
+		AUS = {
+			add_state_claim = 88
+			add_state_claim = 89
+		}
+	}
+}
+
+# Germany honors MR Pact (austria)
+country_event = {
+	id = austria.13
+	title = austria.13.t
+	desc = austria.13.d
+	picture = GFX_report_event_soviet_german_soldier_handshake
+
+	is_triggered_only = yes
+	
+	option = {
+		name = austria.13.a
+		hidden_effect = {
+			country_event = { hours = 6 id = news.33 }
+		}
+	}
+}
+
+# Germany betrays MR Pact (austria)
+country_event = {
+	id = austria.14
+	title = austria.14.t
+	desc = austria.14.d
+	picture = GFX_report_event_german_troops
+
+	is_triggered_only = yes
+	
+	option = {
+		name = germany.14.a
+	}
+}
